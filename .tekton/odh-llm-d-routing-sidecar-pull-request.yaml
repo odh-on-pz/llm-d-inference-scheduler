@@ -39,9 +39,6 @@ spec:
     value: .
   - name: hermetic
     value: false # disabling for now
-  - name: prefetch-input
-    value: |
-      {"type": "gomod", "path": "."}
   - name: build-source-image
     value: true
   - name: build-image-index
