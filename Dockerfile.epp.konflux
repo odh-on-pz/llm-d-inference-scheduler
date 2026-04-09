@@ -31,7 +31,7 @@ RUN \
 RUN \
     LIBUNWIND_LATEST_VERSION=$(curl -s "https://api.github.com/repos/libunwind/libunwind/releases/latest" | jq -r '.tag_name' | sed 's/v//') && \
     curl -L https://github.com/libunwind/libunwind/releases/download/v${LIBUNWIND_LATEST_VERSION}/libunwind-${LIBUNWIND_LATEST_VERSION}.tar.gz | tar xvz && \
-    mv libunwind-${LIBUNWIND_LATEST_VERSION} libunwind && cp libunwind && \
+    mv libunwind-${LIBUNWIND_LATEST_VERSION} libunwind && cd libunwind && \
     source /opt/rh/gcc-toolset-14/enable && \
     ./configure --prefix=/usr/ && make -j $(nproc) && \
     make install
