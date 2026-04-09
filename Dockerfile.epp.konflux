@@ -9,7 +9,7 @@ FROM registry.access.redhat.com/ubi9/ubi-minimal:9.7 AS epel-base
 
 RUN microdnf install -y gcc-toolset-14 libtool make automake jq \
     zlib-devel sqlite-devel ncurses-devel bzip2-devel openssl-devel \
-    readline-devel tk-devel libpcap-devel xz-devel libffi-devel
+    tk-devel libpcap-devel xz-devel libffi-devel
 
 # Build & Install Python2
 RUN \
