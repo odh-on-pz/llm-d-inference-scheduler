@@ -41,6 +41,37 @@ export BUILDER_IMAGE ?= $(BUILDER_TAG_BASE):$(BUILDER_TAG)
 NAMESPACE ?= hc4ai-operator
 LINT_NEW_ONLY ?= false # Set to true to only lint new code, false to lint all code (default matches CI behavior)
 
+# Map go arch to platform-specific arch for typos tool
+ifeq ($(TARGETOS),darwin)
+	ifeq ($(TARGETARCH),amd64)
+		TYPOS_TARGET_ARCH = x86_64
+	else ifeq ($(TARGETARCH),arm64)
+		TYPOS_TARGET_ARCH = aarch64
+	else ifeq ($(TARGETARCH),s390x)
+	        TYPOS_TARGET_ARCH = s390x
+	else ifeq ($(TARGETARCH),ppc64le)
+                TYPOS_TARGET_ARCH = ppc64le
+	else
+		TYPOS_TARGET_ARCH = $(TARGETARCH)
+	endif
+	TAR_OPTS = --strip-components 1
+	TYPOS_ARCH = $(TYPOS_TARGET_ARCH)-apple-darwin
+else
+	ifeq ($(TARGETARCH),amd64)
+		TYPOS_TARGET_ARCH = x86_64
+	else ifeq ($(TARGETARCH),arm64)
+		TYPOS_TARGET_ARCH = aarch64
+	else ifeq ($(TARGETARCH),s390x)
+                TYPOS_TARGET_ARCH = s390x
+	else ifeq ($(TARGETARCH),ppc64le)
+                TYPOS_TARGET_ARCH = ppc64le
+	else
+		TYPOS_TARGET_ARCH = $(TARGETARCH)
+	endif
+	TAR_OPTS = --wildcards '*/typos'
+	TYPOS_ARCH = $(TYPOS_TARGET_ARCH)-unknown-linux-musl
+endif
+
 CONTAINER_RUNTIME := $(shell { command -v docker >/dev/null 2>&1 && echo docker; } || { command -v podman >/dev/null 2>&1 && echo podman; } || echo "")
 export CONTAINER_RUNTIME
 
