@@ -79,7 +79,7 @@ RUN --mount=type=cache,from=epel-base,source=/zeromq,target=/zeromq \
     make -C /zeromq install && \
     make -C /libsodium install && \
     make -C /libunwind install && \
-    make -C /libpgm install
+    make -C /libpgm/openpgm/pgm install
 
 # Copy the Go Modules manifests
 COPY go.mod go.mod
@@ -117,7 +117,7 @@ RUN --mount=type=cache,from=epel-base,source=/zeromq,target=/zeromq \
     make -C /zeromq install && \
     make -C /libsodium install && \
     make -C /libunwind install && \
-    make -C /libpgm install
+    make -C /libpgm/openpgm/pgm install
 
 COPY --from=go-builder /workspace/bin/epp /app/epp
 
