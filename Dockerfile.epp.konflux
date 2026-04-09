@@ -7,7 +7,7 @@
 # EPEL packages build from source stage
 FROM registry.access.redhat.com/ubi9/ubi-minimal:9.7 AS epel-base
 
-RUN dnf install -y gcc-toolset-14 libtool make automake jq && touch /tmp/control
+RUN microdnf install -y gcc-toolset-14 libtool make automake jq && touch /tmp/control
 
 # zeromq-devel
 RUN \
