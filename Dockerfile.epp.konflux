@@ -7,7 +7,17 @@
 # EPEL packages build from source stage
 FROM registry.access.redhat.com/ubi9/ubi-minimal:9.7 AS epel-base
 
-RUN microdnf install -y gcc-toolset-14 libtool make automake jq && touch /tmp/control
+RUN microdnf install -y gcc-toolset-14 libtool make automake jq \
+    zlib-devel sqlite-devel ncurses-devel bzip2-devel openssl-devel \
+    readline-devel tk-devel libpcap-devel xz-devel libffi-devel
+
+# Build & Install Python2
+RUN \
+    curl -L https://www.python.org/ftp/python/2.7.2/Python-2.7.2.tgz | tar xvz && \
+    cd Python-2.7.2 && \
+    source /opt/rh/gcc-toolset-14/enable && \
+    ./configure && make -j $(nproc) && make altinstall && \
+    ln -sf /usr/local/bin/python2.7 /usr/bin/python
 
 # zeromq-devel
 RUN \
@@ -42,9 +52,6 @@ RUN \
     curl -L https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/openpgm/libpgm-5.2.122.tar.gz | tar xvz && \
     mv libpgm-5.2.122 libpgm && cd libpgm/openpgm/pgm && \
     source /opt/rh/gcc-toolset-14/enable && \
-    sed -i 's/print """/print("""/g' version_generator.py && \
-    sed -i 's/"""/""")/g' version_generator.py && \
-    ln -sf /usr/bin/python3 /usr/bin/python && \
     ./configure --prefix=/usr/ --build=powerpc64le-unknown-linux-gnu && make -j $(nproc) && \
     make install
 
